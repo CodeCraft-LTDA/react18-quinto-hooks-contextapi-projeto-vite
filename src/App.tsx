@@ -1,5 +1,6 @@
 import { useId, useReducer, useRef, useState, createContext } from "react";
 import { Button } from "./components/Button.";
+import { Card } from "./components/Card";
 
 type TasksState = string[];
 type TasksAction = {
@@ -15,7 +16,14 @@ const reducer = (state: TasksState, action: TasksAction): TasksState => {
   return state;
 }
 
-export const ThemeContext = createContext<string | null>(null);
+// export const ThemeContext = createContext<string | null>(null);
+
+type ThemeContextType = {
+  theme: string;
+  setTheme: (theme: string) => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType>({theme: "", setTheme: () => {}});
 
 const App = () => {
   const inputID = useId();
@@ -66,6 +74,8 @@ const App = () => {
     setInputValue("");
   }
 
+  const [theme, setTheme] = useState("light");
+
   return (
     <>
       <div>
@@ -96,10 +106,9 @@ const App = () => {
         </ul>
       </div>
 
-      <ThemeContext.Provider value="light">
-        <div>
-          <Button />
-        </div>
+      <ThemeContext.Provider value={{theme, setTheme}}>  
+        <Button />
+        <Card />
       </ThemeContext.Provider>
     </>
   );
