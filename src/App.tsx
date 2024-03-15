@@ -1,4 +1,4 @@
-import { useId, useRef } from "react";
+import { useId, useRef, useState } from "react";
 
 const App = () => {
   const inputID = useId();
@@ -15,10 +15,30 @@ const App = () => {
     if (!current) {
       return;
     }
-    
+
     if (inputElement.current) {
       inputElement.current.focus();
     }
+  }
+
+  const [time, setTime] = useState(0); //FAZ RE-RENDERIZACAO
+  const intervalRef = useRef<number>(); //NAO FAZ RE-RENDERIZACAO
+
+  const handleStart = () => {
+    if (intervalRef.current) {
+      handleStop();
+    }
+
+    const intervalID = setInterval(() => {
+      setTime((t: number) => t + 1);
+      console.log("intevalo foi executado");
+    }, 1000);
+
+    intervalRef.current = intervalID;
+  }
+
+  const handleStop = () => {
+    clearInterval(intervalRef.current);
   }
 
   return (
@@ -30,6 +50,12 @@ const App = () => {
       <div>
         <input type="text" name="" id="input" ref={inputElement} />
         <button onClick={handleClick}>Focar no input</button>
+      </div>
+
+      <div>
+        <p>{time}</p>
+        <button onClick={handleStart}>Start</button>
+        <button onClick={handleStop}>Stop</button>
       </div>
     </>
   );
