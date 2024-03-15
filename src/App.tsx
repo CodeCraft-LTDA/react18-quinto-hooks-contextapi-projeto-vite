@@ -1,4 +1,5 @@
-import { useId, useReducer, useRef, useState } from "react";
+import { useId, useReducer, useRef, useState, createContext } from "react";
+import { Button } from "./components/Button.";
 
 type TasksState = string[];
 type TasksAction = {
@@ -13,6 +14,8 @@ const reducer = (state: TasksState, action: TasksAction): TasksState => {
 
   return state;
 }
+
+export const ThemeContext = createContext<string | null>(null);
 
 const App = () => {
   const inputID = useId();
@@ -92,6 +95,12 @@ const App = () => {
           ))}
         </ul>
       </div>
+
+      <ThemeContext.Provider value="light">
+        <div>
+          <Button />
+        </div>
+      </ThemeContext.Provider>
     </>
   );
 }
