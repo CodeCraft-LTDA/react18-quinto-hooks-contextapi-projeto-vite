@@ -1,4 +1,18 @@
-import { useId, useRef, useState } from "react";
+import { useId, useReducer, useRef, useState } from "react";
+
+type TasksState = string[];
+type TasksAction = {
+  type: "add" | "remove";
+  payload: string;
+}
+
+const reducer = (state: TasksState, action: TasksAction): TasksState => {
+  if (action.type === "add" && action.payload != "") {
+    return [...state, action.payload];
+  }
+
+  return state;
+}
 
 const App = () => {
   const inputID = useId();
@@ -41,6 +55,14 @@ const App = () => {
     clearInterval(intervalRef.current);
   }
 
+  const [tasks, dispatch] = useReducer(reducer, []);
+  const [inputValue, setInputValue] = useState("");
+
+  const handleClickUseReducer = () => {
+    dispatch({ type: "add", payload: inputValue });
+    setInputValue("");
+  }
+
   return (
     <>
       <div>
@@ -56,6 +78,19 @@ const App = () => {
         <p>{time}</p>
         <button onClick={handleStart}>Start</button>
         <button onClick={handleStop}>Stop</button>
+      </div>
+
+      <div>
+        <input type="text" value={inputValue} onChange={e => setInputValue(e.target.value)}/>
+        <button onClick={handleClickUseReducer}>
+          Nova Tarefa
+        </button>
+
+        <ul>
+          {tasks.map((task, key) => (
+            <li key={key}>{task}</li>
+          ))}
+        </ul>
       </div>
     </>
   );
